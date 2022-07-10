@@ -26,20 +26,20 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         else:
             test = req_body.get('test')
             
-    especial = req.params.get('especial')
+    special = req.params.get('special')
     if not test:
         try:
             req_body = req.get_json()
         except ValueError:
             pass
         else:
-            especial = req_body.get('especial')
+            special = req_body.get('special')
 
     try:
-        response = sales.send_sales_report(especial, test)
-        message = f"Report send to Telegram Chat. This HTTP triggered function executed successfully.\n\nespecial={especial},\ntest={test}"
+        response = sales.send_sales_report(special, test)
+        message = f"Report send to Telegram Chat. This HTTP triggered function executed successfully.\n\nspecial={special},\ntest={test}"
         if response:
-            message = f"This HTTP triggered function FAIL.\n\nespecial={especial},\ntest={test}\n\nERROR:\n{response}"
+            message = f"This HTTP triggered function FAIL.\n\nspecial={special},\ntest={test}\n\nERROR:\n{response}"
         return  func.HttpResponse(message)
     except Exception as e:
         return func.HttpResponse(

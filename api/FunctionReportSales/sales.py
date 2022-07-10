@@ -99,7 +99,7 @@ def main(GROUP_ID):
     logging.info(message)
     bot.send_message(GROUP_ID, message)
 
-def send_sales_report(especial=False, test=False):
+def send_sales_report(special=False, test=False):
     if test:
         # For TEST
         GROUP_ID = os.getenv('TEST_GROUP')
@@ -114,7 +114,7 @@ def send_sales_report(especial=False, test=False):
         hour = NOW.hour
         logging.info('Bot online')
         # Time validation to check if the hour is between 6 and 21
-        if (hour >= 6 and hour <= 21) or especial:
+        if (hour >= 6 and hour <= 21) or special:
             main(GROUP_ID)
             logging.info('Process Successful')
         else:
@@ -124,6 +124,6 @@ def send_sales_report(especial=False, test=False):
         return e
 if __name__ == '__main__':
     send_sales_report(
-        especial= True,
+        special= True,
         test= True)
    
