@@ -39,7 +39,7 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         response = sales.send_sales_report(especial, test)
         message = f"Report send to Telegram Chat. This HTTP triggered function executed successfully.\n\nespecial={especial},\ntest={test}"
         if response:
-            message = message + f"\n\n{response}"
+            message = f"This HTTP triggered function FAIL.\n\nespecial={especial},\ntest={test}\n\nERROR:\n{response}"
         return  func.HttpResponse(message)
     except Exception as e:
         return func.HttpResponse(
