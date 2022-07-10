@@ -69,7 +69,7 @@ def main(GROUP_ID):
     * Assemble report
     * Send report to Telegram
     """    
-    date =  pd.Timestamp.now().strftime('%A, %d %B %H:%M')
+    date =  pd.Timestamp.now(tz="Europe/London").strftime('%A, %d %B %H:%M')
     # Today's conversion Report queries to the database
     today1 = utils_bot.df_more_two_cols(db.sql_to_df(SL_company_conversion_day))
     today2 = utils_bot.trans_one_row(db.sql_to_df(SL_total_conversion_day))
@@ -110,7 +110,7 @@ def send_sales_report(special=False, test=False):
 
     
     try:
-        NOW = pd.Timestamp.now()
+        NOW = pd.Timestamp.now(tz="Europe/London")
         hour = NOW.hour
         logging.info('Bot online')
         # Time validation to check if the hour is between 6 and 21
