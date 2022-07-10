@@ -1,8 +1,8 @@
 # Report Telegram Bot Project
 
-This project is in charge of sending real live queries in form of a text message through Telegram API to report the daily figures of the different business areas.
+The project is in charge of sending real live queries in form of a text message through Telegram API to report the daily figures of the sales department. This project is hosted in the Azure FunctionnsAPP ass HTTP trigger. The Azure environment allows this project to be serverless and only be used on-demand. This HTTP is triggered by Azure Logic APPs.
 
-## .env File
+## api/FunctionReportSales/.env File
 
 The environment variables file must be in the main folder of the project with the following name "**.env**" and contain the following variables:
 
@@ -10,67 +10,37 @@ The environment variables file must be in the main folder of the project with th
 * SERVER = Databse server
 * DATABASE = Database 'database'
 * USER_NAME = Database user name
-* PASSWORD = Database password
+* DATABASE_PASSWORD = Database password
 * MAIN_PATH = Project main path
 * TEST_GROUP = Chat id of the TEST group
-* OPERATIONS_GROUP = Chat id of the OPERATIONS group
 * SALES_GROUP = Chat id of the SALES group
-* LOCKSMITHS_GROUP = Chat id of the LOCKSMITH group
+* MAIN_PATH = Name of the Azure FunctionsApp Function in this case 'FunctionReportSales'
 
 To get the chats ids you must use this link, after adding the bot as admin to the new group look inside the response JSON for the necessary chat id.
 ```
 https://api.telegram.org/bot<API_KEY>/getUpdates
 ```
 
-## ./SRC code
+## api/FunctionReportSales/src code
 
 This project uses a few custom modules to address different goals. These modules are shared between the different chat reports.
 
-### ./SRC/bot.py
+### api/FunctionReportSales/src/bot.py
 
 This is a custom module to be imported from other code. Its function is to send messages and images to a chat id.
 To get the chat id, it should be search using the above URL.
 
-### ./SRC/db.py
+### api/FunctionReportSales/src/db.py
 
 This is a custom module to get a DataFrame based on a SQL query.
 
-### ./SRC/utils_bot.py
+### api/FunctionReportSales/src/utils_bot.py
 
 This is a curtom module to adapt the format of the data (queries results) to be printed on Telegram.
 
-# Operations report
+### api/FunctionReportSales/queries
 
-<img src="images/operations_chat.png" width="250"/>
-
-In the image above you can see what the chat and report look like within Telegram.
-
-## operations.py
-
-This is the main python script to generate the report for the group of operations.
-This code makes use of a series of queries saved inside the '**./queries/operations/**' path, all these queries are '**.txt**' files and can be modified as needed.
-
-## operations.bat
-
-This is a windows executable file and it serves two purposes. Can be run with a click or used within a task within the windows scheduler. This code outputs a
-'**.log**' file reporting the execution results
-The file is excecuted every hour.
-
-## ./logs/operations_batch.log
-
-Log file execution report of operations.bat
-
-## Use:
-Python:
-
-It can be used like this:
-```
-python operations.py
-```
-Windows executable:
-
-Just look the 'operations.bat' in your files and click it, or used within a task
-within the windows scheduler.
+This folder contains all the queries necessary for the report.
 
 # Sales report
 
@@ -78,38 +48,44 @@ within the windows scheduler.
 
 In the image above you can see what the chat and report look like within Telegram.
 
-## sales.py
+## api/FunctionReportSales/sales.py
 This is the main python script to generate the sales report for the group of sales.
-The code uses a serie of queries saved inside the '**./queries/sales/**' path, all these queries are '**.txt**' files and can be modified as needed.
+The code uses a series of queries saved inside the '**api/FunctionReportSales/queries**' path, all these queries are '**.sql**' files and can be modified as needed.
 
-## sales.bat
-
-This is a windows executable file and it serves two purposes. Can be run with a click or used within a task within the windows scheduler. This code outputs a
-'**.log**' file reporting the execution results
-For the bot purpose, the file is executed inside a Window sheduler every hour of the day.
-
-## ./logs/sales_batch.log
-
-Log file execution report of sales.bat
+## api/FunctionReportSales/__init__.py
+Python file executed by the Azure Function. It is responsible for receibe and processing the HTTP request. 
+The request has two headers: 
+* Special: (to run the code any time of the day) 
+* Test: (to send a message to the test Telegram group). 
+In case of not receive any of the two headers, the message will be sent to the main group between 6 am - 9 pm.
 
 ## Use:
-Python:
 
-It can be used like this:
+To excecute the Azure function it is necessary:
+1. Sign in to Azure (https://portal.azure.com/#home).
+2. Look for 'Functions App' in the search bar and click it.
+3. Select the Function App (YOUR FUNCTION APP NAME).
+4. Click on "Functions" in the left menu.
+5. Click on the function (YOUR FUNCTION NAME).
+6. Click on "Get Function Url" in the top bar. This will give you the ```<URL>```.
+
+You can use the URL like this:
 ```
-python sales.py
+<URL>
 ```
-Windows executable:
+ 1. Normal use for executions between 6 am and 9 pm. The message will be sent to the sales Telegram group.
 
-Just look the 'sales.bat' in your files and click it, or used within a task inside the windows scheduler.
+```
+<URL>?special=True
+```
+2. For executions outside the normal time. Also for urgent executions.
 
-# Locksmith report
+```
+<URL>?test=True
+```
+3. For testing executions. The message will be sent to the Telegram test group.
 
-<img src="images\locksmiths_chat.png" width="250"/>
-
-In the image above you can see what the chat and report look like within Telegram.
-
-## locksmiths.py
-
-This is the main python script to generate the report for the group of locksmith.
-This code makes use of a series of queries saved inside the '**./queries/locksmiths/**' path, all these queries are '**.txt**' files and can be modified as needed. 
+```
+<URL>?special=True&test=True
+```
+4. For executions outside the normal time and testing purposes. The message will be sent to the Telegram test group.
