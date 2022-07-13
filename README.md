@@ -70,22 +70,23 @@ To excecute the Azure function it is necessary:
 6. Click on "Get Function Url" in the top bar. This will give you the ```<URL>```.
 
 You can use the URL like this:
+1. Normal use for executions between 6 am and 9 pm. The message will be sent to the sales Telegram group.
 ```
 <URL>
 ```
- 1. Normal use for executions between 6 am and 9 pm. The message will be sent to the sales Telegram group.
 
+2. For executions outside the normal time. Also for urgent executions.
 ```
 <URL>?special=True
 ```
-2. For executions outside the normal time. Also for urgent executions.
 
+
+3. For testing executions. The message will be sent to the Telegram test group.
 ```
 <URL>?test=True
 ```
-3. For testing executions. The message will be sent to the Telegram test group.
 
+4. For executions outside the normal time and testing purposes. The message will be sent to the Telegram test group.
 ```
 <URL>?special=True&test=True
 ```
-4. For executions outside the normal time and testing purposes. The message will be sent to the Telegram test group.
