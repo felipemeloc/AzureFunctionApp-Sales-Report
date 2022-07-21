@@ -32,6 +32,8 @@ Contains the following function:
 """
 
 import pandas as pd
+import numpy as np
+import plotly.figure_factory as ff 
 from tabulate import tabulate
 
 def trans_one_row(df:pd.DataFrame, money=False)->str:
@@ -129,3 +131,22 @@ def completed_job_revenue_by_locksmith_day(o_df:pd.DataFrame)->str:
         df['Revenue'] = '£' + df['Revenue'].astype(str)
     df_str = df_more_two_cols(df)
     return df_str
+
+def df_to_image(df:pd.DataFrame, money_cols:list=[], max_length:int=14)->None:    
+    for col, col_type in zip(df.dtypes.index, df.dtypes):
+        if col in money_cols:
+            df[col] = df[col].astype(float).apply(lambda x: f'£{x:.01f}' if not np.isnan(x) else x)
+        elif col_type == 'float64':
+            df[col] = df[col].apply(lambda x: f'{x:.02f}' if not np.isnan(x) else x)
+        elif col_type == 'object':
+            df[col] = df[col].fillna('').astype(str).apply(lambda x: x[0:max_length])
+    df.fillna('', inplace=True)
+    fig =  ff.create_table(df)
+    fig.update_layout(
+        autosize=False,
+        width=100*df.shape[1],
+        height=20*df.shape[0],
+        )
+    local_path = f'/tmp/tmp_image.png'
+    fig.write_image(local_path, scale=2)
+    return local_path
