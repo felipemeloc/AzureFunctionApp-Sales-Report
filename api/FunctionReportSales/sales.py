@@ -71,11 +71,9 @@ def main(GROUP_ID):
     """    
     date =  pd.Timestamp.now(tz="Europe/London").strftime('%A, %d %B %H:%M')
     # Today's conversion Report queries to the database
-    today1 = utils_bot.df_more_two_cols(db.sql_to_df(SL_company_conversion_day))
     today2 = utils_bot.trans_one_row(db.sql_to_df(SL_total_conversion_day))
 
     # Hour conversion Report queries to the database
-    hour1 = utils_bot.df_more_two_cols(db.sql_to_df(SL_company_conversion_hour))
     hour2 = utils_bot.trans_one_row(db.sql_to_df(SL_total_conversion_hour))
 
     # Staff Sales
@@ -83,21 +81,25 @@ def main(GROUP_ID):
     staff1 = utils_bot.df_staff_sales_to_str(staff1)
     staff2 = db.sql_to_df(SL_staff_hour)
     staff2 =  utils_bot.df_staff_sales_to_str(staff2)
-    message = f"""{date}\n
+    message_1 = f"""{date}\n
 *TODAY'S CONVERSION:*\n
-{today1}\n
-{today2}\n
-\n*HOUR CONVERSION:*\n
-{hour1}\n
-{hour2}\n
-\n*STAFF SALES:*\n
+{today2}\n"""
+    bot.send_message(GROUP_ID, message_1)
+    today1 = utils_bot.df_to_image(db.sql_to_df(SL_company_conversion_day))
+    bot.send_photo(GROUP_ID, today1)
+    
+    message_2 = f"""*HOUR CONVERSION:*\n
+{hour2}\n"""
+    bot.send_message(GROUP_ID, message_2)
+    hour1 = utils_bot.df_to_image(db.sql_to_df(SL_company_conversion_hour))
+    bot.send_photo(GROUP_ID, hour1)
+    
+    message_3 = f"""\n*STAFF SALES:*\n
 *Today's Sales*
 {staff1}\n
 *Hour Sales*
-{staff2}
-"""
-    logging.info(message)
-    bot.send_message(GROUP_ID, message)
+{staff2}"""
+    bot.send_message(GROUP_ID, message_3)
 
 def send_sales_report(special=False, test=False):
     if test:
