@@ -24,11 +24,11 @@ from .src import bot
 # import src.bot as bot
 from .src import utils_bot
 # import src.utils_bot as utils_bot
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import logging
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
 # Define project main path
 MAIN_FOLDER = os.getenv('MAIN_PATH')
 

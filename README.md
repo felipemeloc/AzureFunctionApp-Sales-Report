@@ -21,6 +21,35 @@ To get the chats ids you must use this link, after adding the bot as admin to th
 https://api.telegram.org/bot<API_KEY>/getUpdates
 ```
 
+## api\FunctionReportSales\load_env.py
+```
+import os
+
+env_vars = {
+# Project folder
+'MAIN_PATH' : '',
+
+# Telegram API
+'API_KEY' : "",
+'TEST_GROUP' : '',
+'SALES_GROUP' : '',
+
+# Database
+'SERVER' : '',
+'DATABASE' : '',
+'USER_NAME' : '',
+'DATABASE_PASSWORD' : ''
+
+}
+
+def load_env():
+    for key, val in env_vars.items():
+        os.environ[key] = val
+
+load_env()
+
+```
+
 ## api/FunctionReportSales/src code
 
 This project uses a few custom modules to address different goals. These modules are shared between the different chat reports.
