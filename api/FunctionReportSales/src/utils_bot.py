@@ -145,7 +145,7 @@ def df_to_image(df:pd.DataFrame, money_cols:list=[], max_length:int=14)->None:
     fig.update_layout(
         autosize=False,
         width=100*df.shape[1],
-        height=20*df.shape[0],
+        height=20*(1 + df.shape[0]),
         )
     local_path = f'/tmp/tmp_image.png'
     fig.write_image(local_path, scale=2)
